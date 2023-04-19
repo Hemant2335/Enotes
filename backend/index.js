@@ -3,11 +3,14 @@ connecttomongo();
 
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 5000
 
-app.get('/', (req, res) => {
-  res.send('Hii I am Nishant!')
-})
+app.use(express.json()) // if we want to use the request body and print the json object in console 
+
+
+//Available Routes 
+app.use('/api/v1/auth' , require('./routes/auth'));
+app.use('/api/v1/auth' , require('./routes/notes'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
