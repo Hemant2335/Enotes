@@ -1,11 +1,20 @@
-const express  = require('express');
+const express = require('express');
+const router = express.Router();
+const fetchuser = require('../middleware/fetchuser');
+const Note = require('../models/Notes');
 
-const router =  express.Router();
 
-router.get('/',(req , res)=>{
-    obj = {
+
+
+// ROUTE 1: Get All the Notes using: GET "/api/notes/fetchallnotes". Login required
+router.get('/fetchallnotes', fetchuser, async (req, res) => {
+    try {
+        const notes = await Note.find({ user: req.user.id });
+        res.json(notes)
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
     }
-    res.json(obj)
 })
 
 module.exports = router ; 

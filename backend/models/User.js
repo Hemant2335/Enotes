@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 // In this we have imported Schema to use it 
-// and when we export the user it saves the data in the db
+// and when we export the user it saves the data in the db  
 
 const UserSchema = new Schema({
     Name : {type: String , required : true},
