@@ -13,6 +13,6 @@ app.use('/api/v1/auth' , require('./routes/auth'));
 app.use('/api/v1/auth' , require('./routes/notes'));
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Enotes app backend listening on port ${port}`)
 })
 

@@ -39,7 +39,7 @@ const Navbar = () => {
             <span className="badge">New</span>
           </a>
         </li>
-        <li><a>Notes</a></li>
+        <Link to="/yournotes"><li><a>Notes</a></li></Link>
         <li><a>Logout</a></li>
       </ul>
     </div>
