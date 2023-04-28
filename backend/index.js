@@ -1,10 +1,13 @@
 const connecttomongo = require('./db');
+var cors = require('cors')
 connecttomongo();
 
 const express = require('express')
 const app = express()
 const port = 5000
 
+
+app.use(cors())
 app.use(express.json()) // if we want to use the request body and print the json object in console 
 
 

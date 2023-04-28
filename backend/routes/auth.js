@@ -16,17 +16,17 @@ router.post('/createuser',[
   body('Email','Enter a Valid Email').isEmail(),
   body('Password','Enter a Valid Password').isLength({ min: 5 }),
 ],async(req , res)=>{  
-
+  let success = false;
   // IF THERE ARE ERRORS THEN IT WILL PRINT THE ARRAY OF ERRORS 
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success , errors: errors.array() });
     }
 
   // IF THERE WILL BE NO ERRORS THEN THE USER WILL BE CREATED USING USER SCHEMA
   let user = await User.findOne({Email: req.body.Email});
   if (user){
-    return res.status(400).json({error: "Sorry a User with this email already exits or try to login"})
+    return res.status(400).json({success ,  error: "Sorry a User with this email already exits or try to login"})
   }
 
   //THis is the way to create a new user and this is connected to the mongo db in the index file like we are using the THe User.create 
@@ -45,9 +45,9 @@ router.post('/createuser',[
           id: user.id
         }
       }
-  
+      success = true
       const authtoken = jwt.sign(data , JWT);
-      res.json({authtoken});
+      res.json({success , authtoken});
       }).catch((err)=>{console.log("Error Has Recieved"); res.status(500).send("Some Error HAs Occured");
     })
 
@@ -60,10 +60,11 @@ router.post('/login',[
   body('Email','Enter a Valid Email').isEmail(),
   body('Password','Password Cannot be Blank').exists(),
 ], async(req , res)=>{
+  let success = false ; 
   // IF THERE ARE ERRORS THEN IT WILL PRINT THE ARRAY OF ERRORS 
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success , errors: errors.array() });
     }
 
     const {Email , Password} = req.body;
@@ -71,13 +72,13 @@ router.post('/login',[
 
       let user = await User.findOne({Email});
       if (!user){
-        return res.status(400).json({error : "Please Check Wheather the Email and the Password are Correct"});
+        return res.status(400).json({success ,  error : "Please Check Wheather the Email and the Password are Correct"});
       }
 
       const passcomp  = await bcrypt.compare(Password , user.Password);
       if (!passcomp)
       {
-        return res.status(400).json({error : "Please Check Wheather the Email and the Password are Correct"});
+        return res.status(400).json({success ,  error : "Please Check Wheather the Email and the Password are Correct"});
       }
 
       const data = {
@@ -85,9 +86,9 @@ router.post('/login',[
           id: user.id
         }
       }
-  
+      success = true;
       const authtoken = jwt.sign(data , JWT);
-      res.json({authtoken});
+      res.json({success , authtoken});
 
     } catch (error){
       console.log(error.message);

@@ -1,7 +1,41 @@
-import React from "react";
+import React ,{useState } from "react";
 import nbgimg from './img/blob-scene-haikei.png';
-import { Link } from 'react-router-dom';
-const Login = () => {
+import { Link , useNavigate} from 'react-router-dom';
+import Alert from "./Alert";
+const Login = (props) => {
+
+
+  const [Cred, setCred] = useState({Name:"" , Email : "" , Password : ""})
+
+  const navigate = useNavigate();
+
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:5000/api/v1/auth/createuser`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body : JSON.stringify({Email : Cred.Email , Password : Cred.Password ,Name : Cred.Name })
+    });
+    const json = await response.json();
+    console.log(json);
+    if (json.success == true)
+    {
+      localStorage.setItem('token' , json.authtoken)
+      navigate("/")
+    }
+    else
+    {
+      alert("Email Already Exits" , "warning")
+    }
+
+  };
+
+
+  const Onchange=(e)=>{
+    setCred({...Cred , [e.target.name]: e.target.value })
+  }
   return (
     <div>
       <div className="hero min-h-screen " style={{ backgroundImage: `url(${nbgimg})` }}>
@@ -24,6 +58,8 @@ const Login = () => {
                   type="text"
                   placeholder="Name"
                   className="input input-bordered"
+                  name="Name"
+                  onChange={Onchange}
                 />
               </div>
               <div className="form-control">
@@ -34,6 +70,8 @@ const Login = () => {
                   type="text"
                   placeholder="Email"
                   className="input input-bordered"
+                  name="Email"
+                  onChange={Onchange}
                 />
               </div>
               <div className="form-control">
@@ -44,10 +82,13 @@ const Login = () => {
                   type="text"
                   placeholder="password"
                   className="input input-bordered"
+                  name="Password"
+                  onChange={Onchange}
+                  minLength={5}
                 />
               </div>
               <div className="form-control mt-6">
-                <button className="btn btn-primary">Create User</button>
+                <button className="btn btn-primary" onClick={handlesubmit}>Create User</button>
               </div>
             </div>
           </div>
